@@ -1,11 +1,55 @@
 .map {
 	border: 9px solid #999;
 	margin: 10px 0 0 20px;
-	fill: none
+	fill: none;
 }
 
 .tract {
-	fill: none;
-	stroke: red;
-	stroke-width: 2px;
+	stroke: black;
+	stroke-width: .5px;
+}
+
+.dropdown {
+    position: absolute;
+    top: 240px;
+    left: 425px;
+    z-index: 10;
+    font-family: baskerville;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 2px;
+    border: 1px solid #999;
+    box-shadow: 2px 2px 4px #999;
+}
+
+.infolabel {
+    font-family: Baskerville; 
+    position: absolute;
+    text-align: center;
+    min-height: 70px;
+    min-width: 100px;
+    color: #fff;
+    background-color: rgba(51,51,51,.85);
+    border: solid thin black;
+    padding: 5px 10px 10px 5px;
+    top: -75px;
+}
+
+.info {
+   	width: 500px;
+   	bottom: 30px;
+    font-family: Baskerville;
+    font-size: 20px;
+    font-weight: normal;
+    color: #f1f1f1;
+    margin: 0% 10% 1% 75%
+    margin-left: 5px
+    margin-bottom: 100cm;
+    position: relative;
+    bottom: 50px
+}
+
+.infoText {
+    color: #f1f1f1;
+    font-size: 16px;  
 }

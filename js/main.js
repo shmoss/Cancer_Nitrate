@@ -2,9 +2,9 @@
 
 console.log("sdf")
 //set our global variables
-var attrArray = ["TRACTCE10", "GEOID10", "NAME10", "NAMELSAD10", "INTPTLAT10", "INTPTLON10", "nit_long", "COUNTYNS10", "NAME10_1", "NAMELSAD_1", "INTPTLAT_1", "INTPTLON_1", "cancer_num", "CID_sum"]; //list of attributes
+var attrArray = ["nit_long", "cancer_num"]; //list of attributes
 
-var expressed = attrArray[12]; //initial attribute
+var expressed = attrArray[1]; //initial attribute
 console.log(expressed)
 //chart frame dimensions
 var chartWidth = window.innerWidth * 0.425,
@@ -68,155 +68,241 @@ function setMap(){
 		
 		
 		//add community regions to map
-        var tract = map.selectAll(".tract")
-            .data(wisconsinTracts)
+        // var tract = map.selectAll(".tract")
+            // .data(wisconsinTracts)
+            // .enter()
+            // .append("path")
+            // .attr("class", function(d){
+            	// //console.log(d)
+                // return "tract " + d.properties.NAME10_1;
+            // })
+            // .attr("d", path);
+
+
+		//join csv data to GeoJSON enumeration units
+		wisconsinTracts = joinData(wisconsinTracts, csvData); 
+		//console.log(wisconsinTracts)			
+		//create the color scale
+		var colorScale = makeColorScale(csvData);
+		
+		//add enumeration units to the map
+		setEnumerationUnits(wisconsinTracts, map, path, colorScale);  		
+ 		
+		//create dropdown for attribute selection
+		createDropdown(csvData);
+
+		console.log(wisconsinTracts)       
+    };
+     
+// //create initial community area choropleth
+function setEnumerationUnits(wisconsinTracts, map, path, colorScale){	
+	//console.log(wisconsinTracts)	
+	//add communities to map
+	console.log("set enumeration")
+	var tract = map.selectAll(".tract")
+    		.data(wisconsinTracts)
             .enter()
             .append("path")
             .attr("class", function(d){
             	console.log(d)
-                return "tract " + d.properties.NAME10_1;
+                return "tract " + d.properties.cancer_num;
             })
-            .attr("d", path);
+			.attr("d", path)
+			.style("fill", function(d){
+				return choropleth(d.properties, colorScale);
+			})
+		
+		//mousing over will call highlight function
+		// .on("mouseover", function(d){
+        	// highlight(d.properties);     	
+
+		//mousing off will call dehighlight function
+		 // .on("mouseout", function(d){
+            // dehighlight(d.properties);
+
+       	//mousing over will also call moveLabel function
+		//.on("mousemove", moveLabel)
+	// var desc = community.append("desc")
+		// .text('{"stroke": "#3f3f3f", "stroke-width": "1px"}');
+// 		
+};  
+
+function joinData(wisconsinTracts, csvData){
+	//loop through csv to assign each set of csv attribute values to geojson community
+	for (var i=0; i<csvData.length; i++){
+		var csvTract = csvData[i]; //the current community
+		//console.log(csvTract)
+		var csvKey = csvTract.GEOID10; //the CSV key
+		//console.log(csvKey)
+		//loop through geojson regions to find correct community in order to match
+		for (var a=0; a<wisconsinTracts.length; a++){
+			var geojsonProps = wisconsinTracts[a].properties; //the current community geojson properties
+			var geojsonKey = geojsonProps.GEOID10; //the geojson primary key
+			//console.log(geojsonKey)
+			//where keys match, transfer csv data to geojson properties object
+			if (geojsonKey == csvKey){				
+				//assign all attributes and values
+				attrArray.forEach(function(attr){
+					var val = (csvTract[attr]); //get csv attribute value
+					//console.log(val)
+					geojsonProps[attr] = val; //assign attribute and value to geojson properties
+				});
+			};
+		};
+	};
+	console.log(wisconsinTracts)
+	return wisconsinTracts;
+	
+}; 
+
+//make colors
+function makeColorScale(data){
+	//assign color classes for choropleth
+	var colorClasses = [
+        "#fee5d9",
+		"#fcae91",
+		"#fb6a4a",
+		"#de2d26",
+		"#a50f15"
+    ];
+
+    //create color scale generator
+    var colorScale = d3.scale.threshold()
+        .range(colorClasses);
+
+    //build array of all values of the expressed attribute
+    var domainArray = [];
+    //console.log(data)
+    for (var i=0; i<data.length; i++){
+    	// use the value of expressed value in array
+        var val = parseFloat(data[i][expressed]);
+        console.log(val)
+        //console.log(data)
+        domainArray.push(val);
     };
 
+    //cluster data using ckmeans clustering algorithm to create natural breaks
+    var clusters = ss.ckmeans(domainArray, 5);
+    //reset domain array to cluster minimums
+    domainArray = clusters.map(function(d){
+        return d3.min(d);
+    });
+    //remove first value from domain array to create class breakpoints
+    domainArray.shift();
+
+    //assign array of last 4 cluster minimums as domain
+    colorScale.domain(domainArray);
+    console.log(domainArray)
+    console.log(expressed)
+	console.log("color scale") 
+    return colorScale;	
+};
+ 
+ 
+//function to look for data value and return color
+function choropleth(props, colorScale){
+	console.log("hi")
+	//make sure attribute value is a number
+	var val = parseFloat(props[expressed]);
+	console.log(val)
+	//if attribute value exists, assign a color; otherwise assign default (will work for when data = 0)
+	if (val && val != NaN){
+		return colorScale(val);
+	} else {
+		return "#HHH";
+	};
 };
 
-		// //join csv data to GeoJSON enumeration units
-		// wisconsinTracts = joinData(wisconsinTracts, csvData); 
-		// console.log(wisconsinTracts)			
-		// //create the color scale
-		// var colorScale = makeColorScale(csvData);
-// 		
-		// //add enumeration units to the map
-		// setEnumerationUnits(wisconsinTracts, map, path, colorScale);  
-// // 		
-		// // //create chart
-		// // setChart(csvData, colorScale, expressed); 
-// // 		
-		// // //create dropdown for attribute selection
-		// // createDropdown(csvData);
-// 		
-		// //about(); 
-		// console.log(wisconsinTracts)       
-    // };
-//     
-// //create initial community area choropleth
-// function setEnumerationUnits(wisconsinTracts, map, path, colorScale){	
-	// //console.log(wisconsinTracts)	
-	// //add communities to map
-	// var tract = map.selectAll(".tract")
-		// .data(wisconsinTracts)		
-		// .enter()
-		// .append("path")
-		// .attr("class", function(d){ //assign class here
-			// //this will return the name of each community
-			// console.log(d.properties.NAME10_1)
-			// return "tract " + d.properties.NAME10_1;
-// 			
-		// })
-		// .attr("d", path)
-		// .style("fill", function(d){
-			// //style applied based on choropleth function
-			// //console.log(d.properties)
-			// return choropleth(d.properties, colorScale);
-		// })
-// 		
-		// //mousing over will call highlight function
-		// // .on("mouseover", function(d){
-        	// // highlight(d.properties);     	
+// //function to create a dropdown menu for attribute selection
+// function createDropdown(csvData){
+    // //add select element
+    // var dropdown = d3.select("body")
+        // .append("select")
+        // .attr("class", "dropdown")
+        // .on("change", function(){
+            // changeAttribute(this.value, csvData)
+        // });
 // 
-		// //mousing off will call dehighlight function
-		 // // .on("mouseout", function(d){
-            // // dehighlight(d.properties);
+    // //add initial option
+    // var titleOption = dropdown.append("option")
+        // .attr("class", "titleOption")
+        // .attr("disabled", "true")
+        // .text("Select Variable");
 // 
-       	// //mousing over will also call moveLabel function
-		// // .on("mousemove", moveLabel)
-	// // var desc = community.append("desc")
-		// // .text('{"stroke": "#3f3f3f", "stroke-width": "1px"}');
-// 		
-// };  
+    // //add attribute name options
+    // var attrOptions = dropdown.selectAll("attrOptions")
+        // .data(attrArray)
+        // .enter()
+        // .append("option")
+        // .attr("value", function(d){ return d })
+        // .text(function(d){ return d });
+// };
 // 
-// function joinData(wisconsinTracts, csvData){
-	// //loop through csv to assign each set of csv attribute values to geojson community
-	// for (var i=0; i<csvData.length; i++){
-		// var csvTract = csvData[i]; //the current community
-		// //console.log(csvTract)
-		// var csvKey = csvTract.GEOID10; //the CSV key
-		// //console.log(csvKey)
-		// //loop through geojson regions to find correct community in order to match
-		// for (var a=0; a<wisconsinTracts.length; a++){
-			// var geojsonProps = wisconsinTracts[a].properties; //the current community geojson properties
-			// var geojsonKey = geojsonProps.GEOID10; //the geojson primary key
-			// //console.log(geojsonKey)
-			// //where keys match, transfer csv data to geojson properties object
-			// if (geojsonKey == csvKey){				
-				// //assign all attributes and values
-				// attrArray.forEach(function(attr){
-					// var val = (csvTract[attr]); //get csv attribute value
-					// //console.log(val)
-					// geojsonProps[attr] = val; //assign attribute and value to geojson properties
-				// });
-			// };
-		// };
-	// };
-	// console.log(wisconsinTracts)
-	// return wisconsinTracts;
+// //dropdown change listener handler
+// function changeAttribute(attribute, csvData){
+    // //change the expressed attribute
+    // expressed = attribute;
+    // console.log("dyto")
+    // //recreate the color scale
+    // var colorScale = makeColorScale(csvData);
 // 	
-// }; 
-// 
-// //make colors
-// function makeColorScale(data){
-	// //assign color classes for choropleth
-	// var colorClasses = [
-        // "#fee5d9",
-		// "#fcae91",
-		// "#fb6a4a",
-		// "#de2d26",
-		// "#a50f15"
-    // ];
-// 
-    // //create color scale generator
-    // var colorScale = d3.scale.threshold()
-        // .range(colorClasses);
-// 
-    // //build array of all values of the expressed attribute
-    // var domainArray = [];
-    // //console.log(data)
-    // for (var i=0; i<data.length; i++){
-    	// // use the value of expressed value in array
-        // var val = (data[i][expressed]);
-        // console.log(val)
-        // //console.log(data)
-        // domainArray.push(val);
-    // };
-// 
-    // //cluster data using ckmeans clustering algorithm to create natural breaks
-    // var clusters = ss.ckmeans(domainArray, 5);
-    // //reset domain array to cluster minimums
-    // domainArray = clusters.map(function(d){
-        // return d3.min(d);
-    // });
-    // //remove first value from domain array to create class breakpoints
-    // domainArray.shift();
-// 
-    // //assign array of last 4 cluster minimums as domain
-    // colorScale.domain(domainArray);
-// 
-    // return colorScale;	
+    // //recolor enumeration units
+    // var tract = d3.selectAll(".tract")   
+    	// .transition()
+        // .duration(1000)
+        // .style("fill", function(d){
+            // return choropleth(d.properties, colorScale)            
+        // });
+//        
 // };
-//  
-//  
-// //function to look for data value and return color
-// function choropleth(props, colorScale){
-	// //make sure attribute value is a number
-	// var val = parseFloat(props[expressed]);
-	// //if attribute value exists, assign a color; otherwise assign default (will work for when data = 0)
-	// if (val && val != NaN){
-		// return colorScale(val);
-	// } else {
-		// return "#FFF";
-	// };
+// 
+// 
+// //function to create label
+// function setLabel(props){
+    // //label content
+    // var labelAttribute = "<h3>" + props.tract +
+        // "</h3><b>" + props[expressed] + " " + expressed + "</b>" + "<br>" 
+//         
+    // //create info label div
+    // var infolabel = d3.select("body")
+        // .append("div")
+        // .attr({
+            // "class": "infolabel",
+            // "id": props.tract + "_label"
+        // })
+        // .html(labelAttribute);
+// 
+    // var communityName = infolabel.append("div")
+        // .attr("class", "labelname")
+        // .html(props.name);
+//       
+// };
+// 
+// //function to move info label with mouse
+// function moveLabel(){
+	// //get width of label
+	// var labelWidth = d3.select(".infolabel")
+		// .node()
+		// .getBoundingClientRect()
+		// .width;
+// 
+	// //use coordinates of mousemove event to set label coordinates
+	// var x1 = d3.event.clientX + 10,
+		// y1 = d3.event.clientY - 50,
+		// x2 = d3.event.clientX - labelWidth - 10,
+		// y2 = d3.event.clientY + 25;
+// 
+	// //horizontal label coordinate, testing for overflow
+	// var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1;
+	// //vertical label coordinate, testing for overflow
+	// var y = d3.event.clientY < 75 ? y2 : y1;
+// 
+	// d3.select(".infolabel")
+		// .style({
+			// "left": x + "px",
+			// "top": y + "px"
+		// });
 // };
 
-
+};
 })();
