@@ -1,0 +1,10 @@
+.map {
+	border: 9px solid #999;
+	margin: 10px 0 0 20px;
+}
+
+.tract {
+	fill: black;
+	stroke: red;
+	stroke-width: 2px;
+}
