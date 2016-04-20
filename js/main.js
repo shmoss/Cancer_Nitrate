@@ -1,11 +1,11 @@
 (function(){
 
-console.log("sdf")
+
 //set our global variables
 var attrArray = ["nit_long", "cancer_num"]; //list of attributes
 
 var expressed = attrArray[1]; //initial attribute
-console.log(expressed)
+
 //chart frame dimensions
 var chartWidth = window.innerWidth * 0.425,
 	chartHeight = 473,
@@ -62,7 +62,7 @@ function setMap(){
     //once data loaded, callback function
     //takes 4 parameters (including the above three data sources) 
 	function callback(error, csvData, tracts){				
-		console.log("sdfsd")
+		
 
 		var wisconsinTracts = topojson.feature(tracts, tracts.objects.cancer_tracts_ID_final).features;
 		
@@ -91,7 +91,7 @@ function setMap(){
 		//create dropdown for attribute selection
 		createDropdown(csvData);
 
-		console.log(wisconsinTracts)       
+      
     };
     
 };
@@ -100,29 +100,28 @@ function setMap(){
 function setEnumerationUnits(wisconsinTracts, map, path, colorScale){	
 	//console.log(wisconsinTracts)	
 	//add communities to map
-	console.log("set enumeration")
+	
 	var tract = map.selectAll(".tract")
     		.data(wisconsinTracts)
             .enter()
             .append("path")
             .attr("class", function(d){
-            	console.log(d)
-                return "tract " + d.properties.cancer_num;
+            	
+                return "tract " + d.properties.ID;
             })
 			.attr("d", path)
 			.style("fill", function(d){
 				return choropleth(d.properties, colorScale);
 			})
-		
 		//mousing over will call highlight function
-		// .on("mouseover", function(d){
-        	// highlight(d.properties);     	
-
+		.on("mouseover", function(d){
+        	highlight(d.properties);     	
+		})
 		//mousing off will call dehighlight function
 		 // .on("mouseout", function(d){
             // dehighlight(d.properties);
 
-       	//mousing over will also call moveLabel function
+       	// mousing over will also call moveLabel function
 		//.on("mousemove", moveLabel)
 	// var desc = community.append("desc")
 		// .text('{"stroke": "#3f3f3f", "stroke-width": "1px"}');
@@ -152,7 +151,7 @@ function joinData(wisconsinTracts, csvData){
 			};
 		};
 	};
-	console.log(wisconsinTracts)
+	
 	return wisconsinTracts;
 	
 }; 
@@ -178,7 +177,7 @@ function makeColorScale(data){
     for (var i=0; i<data.length; i++){
     	// use the value of expressed value in array
         var val = parseFloat(data[i][expressed]);
-        console.log(val)
+        
         //console.log(data)
         domainArray.push(val);
     };
@@ -203,10 +202,10 @@ function makeColorScale(data){
  
 //function to look for data value and return color
 function choropleth(props, colorScale){
-	console.log("hi")
+	
 	//make sure attribute value is a number
 	var val = parseFloat(props[expressed]);
-	console.log(val)
+	
 	//if attribute value exists, assign a color; otherwise assign default (will work for when data = 0)
 	if (val && val != NaN){
 		return colorScale(val);
@@ -244,7 +243,7 @@ function createDropdown(csvData){
 function changeAttribute(attribute, csvData){
     //change the expressed attribute
     expressed = attribute;
-    console.log("dyto")
+    
     //recreate the color scale
     var colorScale = makeColorScale(csvData);
 	
@@ -257,11 +256,87 @@ function changeAttribute(attribute, csvData){
         });
        
 };
+
+function highlight(props){
+	
+	//change stroke
+	var selected = d3.selectAll(".tract"+props.ID)
+		.style({
+			"stroke": "black",
+			"stroke-width": "2"
+		});
+	
+	//setLabel(props);
+};
+
+function setLabel(props){
+    //label content
+    
+    var labelAttribute = "<h3>" + props.tract +
+        "</h3><b>" + props[expressed] + " " + expressed + "</b>" + "<br>" 
+        
+    //create info label div
+    var infolabel = d3.select("body")
+        .append("div")
+        .attr({
+            "class": "infolabel",
+            "id": props.tract + "_label"
+        })
+        .html(labelAttribute);
+
+    var tractName = infolabel.append("div")
+        .attr("class", "labelname")
+        .html(props.name);
+      
+};
+
+// //function to move info label with mouse
+function moveLabel(){
+	//get width of label
+	var labelWidth = d3.select(".infolabel")
+		.node()
+		.getBoundingClientRect()
+		.width;
 // 
+	// //use coordinates of mousemove event to set label coordinates
+	var x1 = d3.event.clientX + 10,
+		y1 = d3.event.clientY - 50,
+		x2 = d3.event.clientX - labelWidth - 10,
+		y2 = d3.event.clientY + 25;
+// 
+	// //horizontal label coordinate, testing for overflow
+	var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1;
+	//vertical label coordinate, testing for overflow
+	var y = d3.event.clientY < 75 ? y2 : y1;
+
+	d3.select(".infolabel")
+		.style({
+			"left": x + "px",
+			"top": y + "px"
+		});
+};
+
+
+})();
+
+
+//function to highlight enumeration units and bars
+// function highlight(props){
+	// console.log(props)
+	// //change stroke
+	// var selected = d3.selectAll(".tract_" + props.ID)
+		// .style({
+			// "stroke": "black",
+			// "stroke-width": "2"
+		// });
+	// console.log(selected)
+	// setLabel(props);
+// };
 // 
 // //function to create label
 // function setLabel(props){
     // //label content
+    // console.log(props.tract)
     // var labelAttribute = "<h3>" + props.tract +
         // "</h3><b>" + props[expressed] + " " + expressed + "</b>" + "<br>" 
 //         
@@ -274,27 +349,54 @@ function changeAttribute(attribute, csvData){
         // })
         // .html(labelAttribute);
 // 
-    // var communityName = infolabel.append("div")
+    // var tractName = infolabel.append("div")
         // .attr("class", "labelname")
         // .html(props.name);
 //       
 // };
 // 
-// //function to move info label with mouse
+// 
+// function dehighlight(props){
+	// var selected = d3.selectAll(".tract_" + props.ID)
+		// .style({
+			// "stroke": function(){
+				// return getStyle(this, "stroke")
+			// },
+			// "stroke-width": function(){
+				// return getStyle(this, "stroke-width")
+			// }
+		// });
+// 
+	// function getStyle(element, styleName){
+		// var styleText = d3.select(element)
+			// .select("desc")
+			// .text();
+// 
+		// var styleObject = JSON.parse(styleText);
+// 
+		// return styleObject[styleName];
+	// };
+// 
+	// //remove info label
+	// d3.select(".infolabel")
+		// .remove();
+// };
+// 
+// // //function to move info label with mouse
 // function moveLabel(){
 	// //get width of label
 	// var labelWidth = d3.select(".infolabel")
 		// .node()
 		// .getBoundingClientRect()
 		// .width;
-// 
-	// //use coordinates of mousemove event to set label coordinates
+// // 
+	// // //use coordinates of mousemove event to set label coordinates
 	// var x1 = d3.event.clientX + 10,
 		// y1 = d3.event.clientY - 50,
 		// x2 = d3.event.clientX - labelWidth - 10,
 		// y2 = d3.event.clientY + 25;
-// 
-	// //horizontal label coordinate, testing for overflow
+// // 
+	// // //horizontal label coordinate, testing for overflow
 	// var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1;
 	// //vertical label coordinate, testing for overflow
 	// var y = d3.event.clientY < 75 ? y2 : y1;
@@ -305,6 +407,3 @@ function changeAttribute(attribute, csvData){
 			// "top": y + "px"
 		// });
 // };
-
-
-})();

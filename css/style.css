@@ -1,24 +1,20 @@
-..main{
+.main{
 	background-color: white;
 	border-width: .5px;
 	border-style: solid;
 	border-color: black;
+	height: 400px
 }
 
-.jumbotron{
-	padding-top: 15px;
-	padding-bottom: 500px;
+.tract{
+	stroke-width: .5px;
+	stroke: #696969;
 }
 
-.navbar{
-	padding-left:0%;
-	padding-top:0px;
+.body{
+	height: 400px
 }
 
-.navbar-brand{
-	padding-left:10px;
-	padding-top:15px;
-}
 
 .page-header{
 	padding-top: 50px;
@@ -94,12 +90,13 @@ p {
     font-weight: bold;
 }
 
+
 .dropdown {
     position: absolute;
-    top: 28%;
-    left: 82%;
+    top: 180px;
+    left: 425px;
     z-index: 10;
-    font-family: sans-serif;
+    font-family: baskerville;
     font-size: 1em;
     font-weight: bold;
     padding: 2px;
@@ -114,64 +111,16 @@ option {
 .map {
     /* border: thin solid gray;*/
     padding-left: 0;
+    position: absolute;
+    top: 180px;
+    fill: black
 }
 
-.chart {
-    float: center;
-    background-color: white;
-    /*border: medium solid red;*/
-    float: center;
-    margin-top: 0px;
-    margin-left: 38%;
-	padding-left: 0%;
-
-}
 
 .numbers {
     fill: red;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 }
 
-.chartTitle {
 
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-   	text-align: center;
-    fill: black;
-    font-size: 1.2em;
-    font-weight: bold;
-    padding-left: 40%;
-}
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #999;
-    stroke-width: 0px;
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-    font-size: 0.8em;
-    color: red;
-}
-
-.infolabel {
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-    position: absolute;
-    text-align: center;
-    min-height: 70px;
-    min-width: 110px;
-    color: #efeff0;
-    background-color: rgba(51,51,51,.95);
-    padding: 0;
-    padding-bottom: 5px;
-    top: -75px;
-}
-
-.infolabel h1 {
-    margin: 0 20px 0 0;
-    padding: 0;
-    display: inline-block;
-    line-height: 1em;
-}}
