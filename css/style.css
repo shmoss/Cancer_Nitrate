@@ -1,103 +1,177 @@
-.map {
-	border: 3px solid #999;
-	margin: 10px 0 0 20px;
-	fill: none
+..main{
+	background-color: white;
+	border-width: .5px;
+	border-style: solid;
+	border-color: black;
 }
 
-.countries {
-	fill: none;
-	stroke: #CCC;
-	stroke-width: 2px;
+.jumbotron{
+	padding-top: 15px;
+	padding-bottom: 500px;
 }
 
-.regions {
-	stroke: #000;
-	stroke-width: 0.5px;
-	stroke-linecap: round;
+.navbar{
+	padding-left:0%;
+	padding-top:0px;
 }
 
-.gratBackground {
-	fill: #D5E3FF;
+.navbar-brand{
+	padding-left:10px;
+	padding-top:15px;
 }
 
-.gratLines {
-	fill: none;
-	stroke: #999;
-	stroke-width: 1px;
+.page-header{
+	padding-top: 50px;
 }
 
-.chart {
-	float: right;
-	margin: 7px 20px 0 0;
+#entry{
+	padding-left: 40%;
+	padding-top: 300px;
 }
 
-.chartTitle {
-	font-family: sans-serif;
-	font-size: 1.5em;
-	font-weight: bold;
+#title{
+	padding-left:30px;
+	padding-top:45px;
 }
 
-.chartBackground {
-	fill: rgba(128,128,128,.2);
+#title_p{
+	padding-left:30px;
 }
 
-.chartFrame {
-	fill: none;
-	stroke: #999;
-	stroke-width: 3px;
-	shape-rendering: crispEdges;
+#sources{
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    color: gray;
+    line-height: 150%;
 }
 
-/*.numbers {
-	fill: white;
-	font-family: sans-serif;
-}*/
 
-.axis path,
-.axis line {
-	fill: none;
-	stroke: #999;
-	stroke-width: 1px;
-	shape-rendering: crispEdges;
+#panel {
+    width: 36%;
+    height: 300px;
+    padding-left:25px;
+    padding-right:25px;
+	padding-top:20px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    line-height: 42px;
 }
 
-.axis text {
-	font-family: sans-serif;
-	font-size: 0.8em;
-	fill: #999;
+h1 {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   	font-weight: 300;
+   	color: black;
+    padding-left: 5%;
+}
+
+h2 {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   	font-weight: 300;
+   	color: black;
+   	padding-left: 5%;
+}
+
+h4 {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   	font-weight: 300;
+   	color: black;
+   	text-align: center;
+
+}
+
+p {
+   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   font-weight: 300;
+   color: gray;
+   line-height: 200%;
+   padding-left: 3%;
+}
+
+.title {
+   	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 .dropdown {
-	position: absolute;
-	top: 30px;
-	left: 40px;
-	z-index: 10;
-	font-family: sans-serif;
-	font-size: 1em;
-	font-weight: bold;
-	padding: 2px;
-	border: 1px solid #999;
-	box-shadow: 2px 2px 4px #999;
+    position: absolute;
+    top: 28%;
+    left: 82%;
+    z-index: 10;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 2px;
+    border: 1px solid #999;
+    box-shadow: 2px 2px 4px #999;
 }
 
 option {
-	font-weight: normal;
+    font-weight: normal;
+}
+
+.map {
+    /* border: thin solid gray;*/
+    padding-left: 0;
+}
+
+.chart {
+    float: center;
+    background-color: white;
+    /*border: medium solid red;*/
+    float: center;
+    margin-top: 0px;
+    margin-left: 38%;
+	padding-left: 0%;
+
+}
+
+.numbers {
+    fill: red;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+}
+
+.chartTitle {
+
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   	text-align: center;
+    fill: black;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-left: 40%;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #999;
+    stroke-width: 0px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-size: 0.8em;
+    color: red;
 }
 
 .infolabel {
-	position: absolute;
-	height: 50px;
-	min-width: 100px;
-	color: #fff;
-	background-color: #000;
-	border: solid thin #fff;
-	padding: 5px 10px;
-	top: -75px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    position: absolute;
+    text-align: center;
+    min-height: 70px;
+    min-width: 110px;
+    color: #efeff0;
+    background-color: rgba(51,51,51,.95);
+    padding: 0;
+    padding-bottom: 5px;
+    top: -75px;
 }
 
 .infolabel h1 {
-	margin: 0 20px 0 0;
-	padding: 0;
-	display: inline-block;
-	line-height: 1em;
-}
+    margin: 0 20px 0 0;
+    padding: 0;
+    display: inline-block;
+    line-height: 1em;
+}}
